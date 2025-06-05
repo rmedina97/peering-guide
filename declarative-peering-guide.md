@@ -16,7 +16,7 @@ This document analyzes how to declaratively configure each of the Liqo modules f
 
 In both clusters, it is necessary to create a namespace, called the tenant namespace, which will contain all the custom resources (CRs).  
 Each tenant namespace must refer to the peering with a specific cluster; therefore, a distinct tenant namespace must be created for each peering.  
-Tenant namespaces **can have arbitrary names** and do not need to follow the Liqo pattern `liqo-tenant-remote-xxx`.
+Tenant namespaces **can have arbitrary names** and do not need to follow the Liqo pattern `liqo-tenant-xxx`.
 
 The following is a basic template of a tenant namespace with the **mandatory labels**:
 
@@ -158,7 +158,7 @@ Where:
 `LOCAL_TENANT_NAMESPACE` is the tenant namespace of the local cluster;  
 `RESOURCE_NAME` is an arbitrary name assigned to the resource;  
 
-Additionally, each cluster must define a PublicKey resource **containing the public key of the remote cluster**, as shown in the template below, which includes the required labels:
+Additionally, each cluster must define a PublicKey resource **containing the public key of the remote cluster**, as shown in the template below, which **includes the required labels**:
 
 ```yaml
 apiVersion: networking.liqo.io/v1beta1
@@ -321,10 +321,8 @@ Guidance on how to issue a client certificate can be found [here](https://kubern
 
 Refer to the [EKS documentation](https://docs.aws.amazon.com/eks/latest/userguide/cluster-auth.html) for details on how access control is handled in this environment.
 
-```{warning}
-Client certificate-based authentication is [not directly supported on Amazon EKS](https://aws.amazon.com/blogs/containers/managing-access-to-amazon-elastic-kubernetes-service-clusters-with-x-509-certificates/).
+>**Note** Client certificate-based authentication is [not directly supported on Amazon EKS](https://aws.amazon.com/blogs/containers/managing-access-to-amazon-elastic-kubernetes-service-clusters-with-x-509-certificates/).
 Refer to the [EKS documentation](https://docs.aws.amazon.com/eks/latest/userguide/cluster-auth.html) for details on how access control is handled in this environment.
-```
 
 ### Role Binding for the Consumer Cluster User (Provider Cluster)
 
@@ -434,7 +432,7 @@ To configure authentication, the following resources must be created:
 
 **On the consumer cluster:**
 
--Secret resource containing the kubeconfig with the credentials required to access the provider cluster
+- Secret resource containing the kubeconfig with the credentials required to access the provider cluster
 
 This setup enables the consumer cluster to authenticate with the provider and initiate the resource negotiation process.
 
@@ -507,10 +505,6 @@ For instance, the configuration above enables the offloading of the chosen names
 
 Refer to [the namespace offloading documentation](../../usage/namespace-offloading.md#namespace-mapping-strategy) for more in-depth explanations.
 
-```{warning}
-Currently, the `NamespaceOffloading` resource **must be created before scheduling any pod** intended to run on a remote cluster.
-
-If a pod is created before the namespace has been offloaded, it will remain indefinitely in the `Pending` state—even after the offloading configuration is applied.
-
+>**Note** Currently, the `NamespaceOffloading` resource **must be created before scheduling any pod** intended to run on a remote cluster.  
+If a pod is created before the namespace has been offloaded, it will remain indefinitely in the `Pending` state—even after the offloading configuration is applied.  
 **It is therefore crucial to offload the namespace first**, before initiating pod scheduling.
-```
