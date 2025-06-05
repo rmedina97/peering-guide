@@ -329,7 +329,7 @@ Refer to the [EKS documentation](https://docs.aws.amazon.com/eks/latest/userguid
 After creating the credentials that the consumer cluster will use to authenticate with the provider, it is necessary to assign the minimal set of permissions required for the consumer to operate.  
 It is important to note that **the consumer cluster does not create workloads directly on the provider cluster**. At this stage, the consumer only requires permission to create Liqo resources, such as `ResourceSlice` objects, which are then subject to approval by the provider.
 
-To assign the appropriate permissions, the user associated with the consumer cluster must be bound to the `liqo-remote-controlpane` ClusterRole. This is achieved by applying the following `RoleBinding` resource within the tenant namespace of the provider cluster:
+To assign the appropriate permissions, the user associated with the consumer cluster must be bound to the `liqo-remote-controlpane` ClusterRole. This is accomplished by creating a `RoleBinding` custom resource within the tenant namespace of the provider cluster, as illustrated in the following example, which includes **the mandatory labels and role definition**:
 
 ```yaml
 apiVersion: rbac.authorization.k8s.io/v1
