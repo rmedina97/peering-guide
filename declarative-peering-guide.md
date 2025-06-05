@@ -496,12 +496,15 @@ spec:
   podOffloadingStrategy: LocalAndRemote
 ```
 
-Where:
+Where:  
 `NAMESPACE_NAME_TO_OFFLOAD` is the name of the namespace to offload;
 
 This resource must be created in the namespace intended to be offloaded to remote clusters.
 
 For instance, the configuration above enables the offloading of the chosen namespace to all available provider clusters. The `podOffloadingStrategy: LocalAndRemote` policy allows pods in the namespace to be scheduled either locally or remotely, depending on the Kubernetes scheduler’s decisions (e.g., a remote virtual node with more available resources may be favored over a saturated local node).
+
+>**Note**:When inspecting the status of the Liqo provider cluster, offloading is reported as disabled. This behavior is expected and indicates that the provider cluster is not configured to offload its workloads to the consumer cluster.  
+To enable bidirectional offloading, using different namespaces on both clusters, the same offloading configuration steps must be performed in the opposite direction, from the provider to the consumer cluster.
 
 Refer to [the namespace offloading documentation](../../usage/namespace-offloading.md#namespace-mapping-strategy) for more in-depth explanations.
 
