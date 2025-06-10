@@ -6,9 +6,9 @@ This approach simplifies automation, GitOps, and continuous delivery. For exampl
 
 This document analyzes how to declaratively configure each of the Liqo modules for two clusters:
 
-- Networking
-- Authentication
-- Offloading
+- [Networking](#net)
+- [Authentication](#auth)
+- [Offloading](#offloading)
 
 >**Note** The labels on the templates provided in this guide are all mandatory.
 
@@ -77,7 +77,7 @@ metadata:
 spec: {}
 ```
 
-## Declarative network configuration
+## <a id="net"></a>Declarative network configuration
 
 By default, the network connection between clusters is set up using a secure channel created with [Wireguard](https://www.wireguard.com/).  
 Usually, one cluster (usually the provider) hosts the server gateway that exposes a UDP port, which the client gateway (usually on the consumer cluster) needs to reach.  
@@ -310,7 +310,7 @@ Once all the required resources are in place, the gateway client should be able 
 
 The status of the connection can be verified by inspecting the corresponding `Connection` resource, as described [here](./inter-cluster-network.md#connection-crds).
 
-## Declarative Configuration of Cluster Authentication
+## <a id="auth"></a>Declarative Configuration of Cluster Authentication
 
 This section describes how to configure authentication between clusters, enabling the consumer cluster to request resources from the provider cluster.
 
@@ -439,7 +439,7 @@ This setup enables the consumer cluster to authenticate with the provider and in
 >**Note**: When inspecting the status of the Liqo consumer cluster, authentication will appear as disabled. This indicates that no user credentials have been configured for the provider cluster to authenticate against the consumer cluster, meaning that resource negotiation is unidirectional.  
 To enable bidirectional resource negotiation, it is necessary to repeat the same authentication setup steps in the opposite direction, as creating credentials on the consumer cluster and pass them to the provider cluster.
 
-## Declarative Configuration of Namespace Offloading
+## <a id="offloading"></a>Declarative Configuration of Namespace Offloading
 
 While offloading is independent from the network, which means that it is possible to negotiate resources and configure a namespace offloading without the inter-cluster network enabled, **a [working authentication configuration](#declarative-configuration-of-clusters-authentication) is a pre-requisite to enable offloading**.
 
