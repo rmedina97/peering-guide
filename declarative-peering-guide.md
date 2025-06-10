@@ -9,6 +9,7 @@ This document analyzes how to declaratively configure each of the Liqo modules f
 - [Networking](#net)
 - [Authentication](#auth)
 - [Offloading](#offloading)
+- [Unpeer](#unpeer)
 
 >**Note** The labels on the templates provided in this guide are all mandatory.
 
@@ -17,7 +18,6 @@ This document analyzes how to declaratively configure each of the Liqo modules f
 In both clusters, it is necessary to create a namespace, called the tenant namespace, which will contain all the custom resources (CRs).  
 Each tenant namespace must refer to the peering with a specific cluster; therefore, a distinct tenant namespace must be created for each peering.  
 Tenant namespaces **can have arbitrary names** and do not need to follow the Liqo pattern `liqo-tenant-xxx`.
-
 The following is a basic template of a tenant namespace with the **mandatory labels**:
 
 ```yaml
@@ -108,7 +108,6 @@ Where:
 `POD_CIDR_REMOTE_CLUSTER` is the internal pod CIDR of the remote cluster (also set at Liqo install time);  
 
 **This Configuration resource needs to be applied on both clusters** and **must include the pod and external CIDRs of the other cluster** (e.g., cluster A’s config includes cluster B’s CIDRs, and vice versa).
-
 You can check the pod and external CIDRs configured on a cluster by running:
 
 ```bash
@@ -181,8 +180,7 @@ Where:
 
 #### Example Resources to Be Applied (Provider Cluster)
 
-The following example resources illustrate the configuration to be applied on the provider cluster
-
+The following example resources illustrate the configuration to be applied on the provider cluster.
 The first resource is a Secret containing the WireGuard key pair generated for the provider cluster itself:
 
 ```yaml
@@ -201,7 +199,6 @@ data:
 ```
 
 The remote-cluster-id label must match the ID of the consumer cluster, while the namespace must refer to the local tenant namespace of the provider cluster.
-
 The second resource is a PublicKey, which contains the public key of the consumer cluster:
 
 ```yaml
@@ -220,7 +217,6 @@ spec:
 ### Configuring the Server Gateway (Provider Cluster)
 
 By default, Liqo establishes inter-cluster communication through a WireGuard tunnel. This section describes the configuration of the gateway server, which acts as the endpoint to which the client gateway connects.
-
 The `GatewayServer` custom resource defines the server-side configuration and must be applied to the cluster designated as the server in the tunnel setup.  
 When defining the `GatewayServer` resource, it is essential to **specify the `secretRef` field**, referencing the previously generated WireGuard key pair.  
 Under the `.spec.endpoint` field, it is possible to configure a fixed `nodePort` or `loadBalancerIP` (if supported by the infrastructure provider) to expose the gateway on a specific UDP port or IP address. This allows the client-side configuration to be determined in advance.  
@@ -257,9 +253,7 @@ Where:
 ### Configuring the Client Gateway (Consumer Cluster)
 
 The client gateway will be configured on the consumer cluster to establish a connection with the provider's exposed WireGuard service.
-
 The `GatewayClient` custom resource specifies the configuration parameters of the client gateway, including the endpoint information required to initiate the connection with the gateway server.
-
 The following is an example of a `GatewayClient` resource, to be applied on the consumer cluster, with **the mandatory labels**:
 
 ```yaml
@@ -307,18 +301,14 @@ Additionally:
 - the consumer cluster must define a `GatewayClient` resource to connect to the provider’s gateway server
 
 Once all the required resources are in place, the gateway client should be able to connect to the server and establish the WireGuard tunnel.
-
 The status of the connection can be verified by inspecting the corresponding `Connection` resource, as described [here](./inter-cluster-network.md#connection-crds).
 
 ## <a id="auth"></a>Declarative Configuration of Cluster Authentication
 
 This section describes how to configure authentication between clusters, enabling the consumer cluster to request resources from the provider cluster.
-
 When authentication is manually configured, **it is the responsibility of the user to provide credentials that grant the necessary permissions** for the consumer cluster to operate correctly.
-
 For additional information regarding authentication mechanisms in Kubernetes, refer to [the official documentation](https://kubernetes.io/docs/reference/access-authn-authz/authentication/).  
 Guidance on how to issue a client certificate can be found [here](https://kubernetes.io/docs/tasks/tls/certificate-issue-client-csr/).
-
 Refer to the [EKS documentation](https://docs.aws.amazon.com/eks/latest/userguide/cluster-auth.html) for details on how access control is handled in this environment.
 
 >**Note** Client certificate-based authentication is [not directly supported on Amazon EKS](https://aws.amazon.com/blogs/containers/managing-access-to-amazon-elastic-kubernetes-service-clusters-with-x-509-certificates/).
@@ -328,7 +318,6 @@ Refer to the [EKS documentation](https://docs.aws.amazon.com/eks/latest/userguid
 
 After creating the credentials that the consumer cluster will use to authenticate with the provider, it is necessary to assign the minimal set of permissions required for the consumer to operate.  
 It is important to note that **the consumer cluster does not create workloads directly on the provider cluster**. At this stage, the consumer only requires permission to create Liqo resources, such as `ResourceSlice` objects, which are then subject to approval by the provider.
-
 To assign the appropriate permissions, the user associated with the consumer cluster must be bound to the `liqo-remote-controlpane` ClusterRole. This is accomplished by creating a `RoleBinding` custom resource within the tenant namespace of the provider cluster, as illustrated in the following example, which includes **the mandatory labels and role definition**:
 
 ```yaml
@@ -358,7 +347,6 @@ Where:
 
 To enable authentication and resource negotiation from the consumer cluster, the provider cluster must define a `Tenant` resource. This resource is used to manage authorization policies of the remote consumer.  
 For instance, if it is necessary to prevent the consumer cluster from negotiating additional resources, the tenantCondition field can be set to `Cordoned`, which halts any further resource negotiation.
-
 In the context of declarative configuration, where no automatic handshake occurs between clusters, the Tenant must be explicitly configured to accept `ResourceSlice` objects from the consumer. This is achieved by setting the `authzPolicy` field to `TolerateNoHandshake`, as illustrated in the following example:
 
 ```yaml
@@ -382,7 +370,6 @@ Where:
 ### Adding the Credentials to the Consumer Cluster (Consumer Cluster)
 
 The credentials previously created in the provider cluster must be made available to the consumer cluster. This is achieved by creating an identity `Secret` containing a kubeconfig file with the necessary credentials to authenticate and interact with the provider cluster.
-
 An example of the identity Secret is provided below, with **the mandatory labels and annotations**:
 
 ```yaml
@@ -407,7 +394,6 @@ Where:
 `BASE64_KUBECONFIG_USER` is the kubeconfig file, encoded in base64, containing the credentials of the user previously created in the provider cluster;
 
 Once this Secret is created, the `liqo-crd-replicator` component in the consumer cluster initiates the replication of resources and enables the creation of `ResourceSlice` resources targeting the provider cluster. This allows the consumer to begin negotiating resources with the provider.
-
 The following log output from the `liqo-crd-replicator` pod confirms that the replication process has started correctly:
 
 ```text
@@ -446,7 +432,6 @@ While offloading is independent from the network, which means that it is possibl
 ### Requesting Resources: Configure a `ResourceSlice` (Consumer Cluster)
 
 The `ResourceSlice` custom resource defines the computational resources requested by the consumer cluster from a remote provider cluster. It must be created in the tenant namespace of the consumer cluster and is automatically propagated to the provider cluster, which may accept or reject the request.
-
 The following is an example of a `ResourceSlice` resource:
 
 ```yaml
@@ -476,7 +461,6 @@ Where:
 `VIRTUAL_NODE_NAME` is the name that will be assigned to the virtual node representing the provider cluster within the consumer cluster;
 
 If the provider cluster accepts the request, a virtual node will be created on the consumer cluster, exposing the requested resources and acting as a proxy for the provider cluster.
-
 For additional details on the `ResourceSlice` and `VirtualNode` resources, refer to [the dedicated documentation section](./offloading-in-depth.md#create-resourceslice).
 
 ### Enabling Offloading and Remote Availability of Kubernetes Resources
@@ -500,14 +484,32 @@ Where:
 `NAMESPACE_NAME_TO_OFFLOAD` is the name of the namespace to offload;
 
 This resource must be created in the namespace intended to be offloaded to remote clusters.
-
 For instance, the configuration above enables the offloading of the chosen namespace to all available provider clusters. The `podOffloadingStrategy: LocalAndRemote` policy allows pods in the namespace to be scheduled either locally or remotely, depending on the Kubernetes scheduler’s decisions (e.g., a remote virtual node with more available resources may be favored over a saturated local node).
 
 >**Note**:When inspecting the status of the Liqo provider cluster, offloading is reported as disabled. This behavior is expected and indicates that the provider cluster is not configured to offload its workloads to the consumer cluster.  
 To enable bidirectional offloading, using different namespaces on both clusters, the same offloading configuration steps must be performed in the opposite direction, from the provider to the consumer cluster.
-
 Refer to [the namespace offloading documentation](../../usage/namespace-offloading.md#namespace-mapping-strategy) for more in-depth explanations.
 
 >**Note** Currently, the `NamespaceOffloading` resource **must be created before scheduling any pod** intended to run on a remote cluster.  
 If a pod is created before the namespace has been offloaded, it will remain indefinitely in the `Pending` state—even after the offloading configuration is applied.  
 **It is therefore crucial to offload the namespace first**, before initiating pod scheduling.
+
+## <a id="unpeer"></a>Delete the peering and clean the environment
+The peering can be removed by deleting all the Custom Resources (CRs) that were created. The following list outlines a recommended order for deletion:
+
+1. Offloading
+   1. NamespaceOffloading  (delete the permission to offload a namespace)
+   2. ResourceSlice        (delete the virtual node, representation of the remote cluster)
+2. Authentication
+   1. Tenant               (delete the auth policies applied)
+   2. RoleBinding          (delete the permission to create the liqo resources such as resource slices)
+3. Networking
+   1. Gateway client
+   2. Gateway server
+   3. Configuration
+4. All the secret about the peering that were left, such as:
+   1. Identity secret      (Authentication)
+   2. Gateway keys         (Networking)
+   3. Publickeys           (Netwroking)
+
+After these steps, the peering is effectively undone; however, the provider cluster remains known by the consumer cluster. To completely remove all information, delete the corresponding `ForeignCluster` resource.
