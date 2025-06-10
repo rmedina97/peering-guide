@@ -512,4 +512,4 @@ The peering can be removed by deleting all the Custom Resources (CRs) that were 
    2. Gateway keys         (Networking)
    3. Publickeys           (Netwroking)
 
-After these steps, the peering is effectively undone; however, the provider cluster remains known by the consumer cluster. To completely remove all information, delete the corresponding `ForeignCluster` resource.
+After these steps, the peering is effectively undone; however, both clusters still retain information about each other. To completely remove all references, delete the corresponding `ForeignCluster` resources from both clusters. The resource names correspond to the cluster IDs of the respective remote clusters.
