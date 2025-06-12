@@ -13,7 +13,7 @@ This document analyzes how to declaratively configure each of the Liqo modules f
 
 >**Note** The labels on the templates provided in this guide are all mandatory.
 
-## Tenant namespace
+## Tenant Namespace
 
 In both clusters, it is necessary to create a namespace, called the tenant namespace, which will contain all the custom resources (CRs).  
 Each tenant namespace must refer to the peering with a specific cluster; therefore, a distinct tenant namespace must be created for each peering.  
@@ -494,22 +494,21 @@ Refer to [the namespace offloading documentation](../../usage/namespace-offloadi
 If a pod is created before the namespace has been offloaded, it will remain indefinitely in the `Pending` state—even after the offloading configuration is applied.  
 **It is therefore crucial to offload the namespace first**, before initiating pod scheduling.
 
-## <a id="unpeer"></a>Delete the peering and clean the environment
-The peering can be removed by deleting all the Custom Resources (CRs) that were created. The following list outlines a recommended order for deletion:
+## <a id="unpeer"></a>Delete the Peering and Clean the Environment
+To properly remove a peering between clusters, all associated Custom Resources (CRs) must be deleted. It is important to delete these resources in reverse order of their creation to avoid possible errors. For example, offloading resources cannot be deleted if authentication to the remote cluster is no more active. The following is a recommended order for deleting the CRs:
 
 1. Offloading
-   1. NamespaceOffloading  (delete the permission to offload a namespace)
-   2. ResourceSlice        (delete the virtual node, representation of the remote cluster)
+   1. `NamespaceOffloading`  (Remove the permission to offload namespace)
+   2. `ResourceSlice`        (Remove the virtual node representing the remote cluster)
 2. Authentication
-   1. Tenant               (delete the auth policies applied)
-   2. RoleBinding          (delete the permission to create the liqo resources such as resource slices)
+   1. `Tenant`               (Remove any authentication policies applied to the tenant)
+   2. `RoleBinding`          (Remove permissions granted for creating Liqo resources)
+   3. Identity secret        (Remove the credentials used by the consumer cluster to authenticate with the remote cluster)
 3. Networking
-   1. Gateway client
-   2. Gateway server
-   3. Configuration
-4. All the secret about the peering that were left, such as:
-   1. Identity secret      (Authentication)
-   2. Gateway keys         (Networking)
-   3. Publickeys           (Netwroking)
+   1. `Gateway client`
+   2. `Gateway server`
+   3. `Configuration`
+   4. `Publickeys` resources
+   5.  Remove the remaining secrets
 
 After these steps, the peering is effectively undone; however, both clusters still retain information about each other. To completely remove all references, delete the corresponding `ForeignCluster` resources from both clusters. The resource names correspond to the cluster IDs of the respective remote clusters.
