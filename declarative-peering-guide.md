@@ -84,6 +84,8 @@ Usually, one cluster (usually the provider) hosts the server gateway that expose
 In this guide, **the client gateway will be configured on the consumer cluster, and the server gateway on the provider cluster**, since this is the most common setup.  
 That said, since the network peering setup is independent from the offloading role of the clusters (consumer vs. provider), it’s possible to swap the client/server roles if that works better in a different environment.
 
+<img src="./images/networking-v2.png" alt="Networking Liqo Components" width="700"/>
+
 ### Creating and exchanging the network configurations (both clusters)
 
 The two clusters that need to be connected require the network configuration of the other, which is provided via the `Configuration` CR, which basic template with the **mandatory labels** is the following:
