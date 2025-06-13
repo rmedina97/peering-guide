@@ -313,6 +313,8 @@ For additional information regarding authentication mechanisms in Kubernetes, re
 Guidance on how to issue a client certificate can be found [here](https://kubernetes.io/docs/tasks/tls/certificate-issue-client-csr/).
 Refer to the [EKS documentation](https://docs.aws.amazon.com/eks/latest/userguide/cluster-auth.html) for details on how access control is handled in this environment.
 
+<img src="./images/authentication-v1.png" alt="Authentication Liqo Components" width="700"/><br>
+
 >**Note** Client certificate-based authentication is [not directly supported on Amazon EKS](https://aws.amazon.com/blogs/containers/managing-access-to-amazon-elastic-kubernetes-service-clusters-with-x-509-certificates/).
 Refer to the [EKS documentation](https://docs.aws.amazon.com/eks/latest/userguide/cluster-auth.html) for details on how access control is handled in this environment.
 
@@ -430,6 +432,8 @@ To enable bidirectional resource negotiation, it is necessary to repeat the same
 ## <a id="offloading"></a>Declarative Configuration of Namespace Offloading
 
 While offloading is independent from the network, which means that it is possible to negotiate resources and configure a namespace offloading without the inter-cluster network enabled, **a [working authentication configuration](#declarative-configuration-of-clusters-authentication) is a pre-requisite to enable offloading**.
+
+<img src="./images/offloading-v1.png" alt="Offloading Liqo Components" width="700"/>
 
 ### Requesting Resources: Configure a `ResourceSlice` (Consumer Cluster)
 
