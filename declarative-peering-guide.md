@@ -136,7 +136,7 @@ echo "Private key:"; cat private.der | tail -c 32 | base64
 echo "Public key:"; cat public.der | tail -c 32 | base64
 ```
 
-After generating the key pairs for each cluster (provider and consumer), a Secret resource must be created in each cluster to store its respective keys. The following template **includes the required labels**.
+After generating the key pairs for each cluster (provider and consumer), a Secret resource must be created in each cluster to store its respective keys. The following template **includes the required labels**:
 
 ```yaml
 apiVersion: v1
@@ -351,7 +351,7 @@ Where:
 
 To enable authentication and resource negotiation from the consumer cluster, the provider cluster must define a `Tenant` resource. This resource is used to manage authorization policies of the remote consumer.  
 For instance, if it is necessary to prevent the consumer cluster from negotiating additional resources, the tenantCondition field can be set to `Cordoned`, which halts any further resource negotiation.
-In the context of declarative configuration, where no automatic handshake occurs between clusters, the Tenant must be explicitly configured to accept `ResourceSlice` objects from the consumer. This is achieved by setting the `authzPolicy` field to `TolerateNoHandshake`, as illustrated in the following example:
+In the context of declarative configuration, where no automatic handshake occurs between clusters, the Tenant must be explicitly configured to accept `ResourceSlice` objects from the consumer. This is achieved by setting the `authzPolicy` field to `TolerateNoHandshake`, as illustrated in the following example with **the mandatory labels and annotations**:
 
 ```yaml
 apiVersion: authentication.liqo.io/v1beta1
