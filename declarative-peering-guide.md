@@ -106,11 +106,10 @@ spec:
 Where:  
 `REMOTE_CLUSTER_ID` is the remote cluster’s ID, set during Liqo installation;  
 `RESOURCE_NAME` is an arbitrary name assigned to the resource;  
-`EXTERNAL_CIDR_REMOTE_CLUSTER` is the external CIDR of the remote cluster (set at Liqo install time);  
-`POD_CIDR_REMOTE_CLUSTER` is the internal pod CIDR of the remote cluster (also set at Liqo install time);  
+`EXTERNAL_CIDR_REMOTE_CLUSTER` is the external CIDR of the remote cluster (set at Liqo install time), default is 10.70.0.0/16;  
+`POD_CIDR_REMOTE_CLUSTER` is the internal pod CIDR of the remote cluster (also set at Liqo install time), default is 10.42.0.0/16;  
 
-**This Configuration resource needs to be applied on both clusters** and **must include the pod and external CIDRs of the other cluster** (e.g., cluster A’s config includes cluster B’s CIDRs, and vice versa).
-You can check the pod and external CIDRs configured on a cluster by running:
+**This Configuration resource needs to be applied on both clusters** and **must include the pod and external CIDRs of the other cluster** (e.g., cluster A’s config includes cluster B’s CIDRs, and vice versa). If the CIDRs are not explicitly set during installation, they default to the same values across all clusters. However, this does not cause conflicts, as each cluster operates within its own Liqo control plane, which handles address remapping transparently. The Pod and External CIDRs configured on a cluster can be inspected by running:
 
 ```bash
 kubectl get networks.ipam.liqo.io -n liqo external-cidr -o=jsonpath={'.status.cidr'}
