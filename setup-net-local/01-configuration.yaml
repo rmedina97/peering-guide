@@ -1,0 +1,15 @@
+apiVersion: networking.liqo.io/v1beta1
+kind: Configuration
+metadata:
+  creationTimestamp: null
+  labels:
+    liqo.io/remote-cluster-id: provider
+  name: provider
+spec:
+  remote:
+    cidr:
+      external:
+      - 10.70.0.0/16
+      pod:
+      - 10.42.0.0/16
+status: {}

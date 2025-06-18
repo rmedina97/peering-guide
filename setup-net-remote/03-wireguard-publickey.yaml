@@ -1,0 +1,10 @@
+apiVersion: networking.liqo.io/v1beta1
+kind: PublicKey
+metadata:
+  labels:
+    liqo.io/remote-cluster-id: consumer
+    networking.liqo.io/gateway-resource: "true"
+  name: gw-publickey
+  namespace: liqo-tenant-consumer
+spec:
+  publicKey: ahPstVhybRiIyxSPhZgfWkc5vMUaJTFHaCcTr2KEW2A=

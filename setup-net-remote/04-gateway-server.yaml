@@ -1,0 +1,20 @@
+apiVersion: networking.liqo.io/v1beta1
+kind: GatewayServer
+metadata:
+  labels:
+    liqo.io/remote-cluster-id: consumer
+  name: server
+  namespace: liqo-tenant-consumer
+spec:
+  endpoint:
+    port: 51840
+    serviceType: NodePort
+    nodePort: 32750
+  mtu: 1340
+  secretRef:
+    name: gw-keys
+  serverTemplateRef:
+    apiVersion: networking.liqo.io/v1beta1
+    kind: WgGatewayServerTemplate
+    name: wireguard-server
+    namespace: liqo
