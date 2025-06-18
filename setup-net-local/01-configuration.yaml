@@ -5,6 +5,7 @@ metadata:
   labels:
     liqo.io/remote-cluster-id: provider
   name: provider
+  namespace: liqo-tenant-provider
 spec:
   remote:
     cidr:
