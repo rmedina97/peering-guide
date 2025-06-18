@@ -1,0 +1,15 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: net-local
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/rmedina97/peering-guide.git'
+    targetRevision: HEAD
+    path:  net-local
+  destination:
+    server: 'https://kubernetes.default.svc'   # cluster locale
