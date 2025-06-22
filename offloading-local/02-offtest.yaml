@@ -1,0 +1,10 @@
+apiVersion: offloading.liqo.io/v1beta1
+kind: NamespaceOffloading
+metadata:
+  name: offloading
+  namespace: demo # Name of the namespace to offload on the provider
+spec:
+  clusterSelector:
+    nodeSelectorTerms: []
+  namespaceMappingStrategy: DefaultName
+  podOffloadingStrategy: Remote

@@ -1,0 +1,18 @@
+apiVersion: authentication.liqo.io/v1beta1
+kind: ResourceSlice
+metadata: # Mandatory annotations and labels for Liqo
+  annotations: 
+    liqo.io/create-virtual-node: "true"
+  creationTimestamp: null
+  labels:
+    liqo.io/remote-cluster-id: provider
+    liqo.io/remoteID: provider
+    liqo.io/replication: "true"
+  name: test
+  namespace: liqo-tenant-provider
+spec:
+  class: default
+  providerClusterID: provider
+  resources:
+    cpu: 1
+    memory: 1Gi
