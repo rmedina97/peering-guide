@@ -466,7 +466,7 @@ Where:
 `VIRTUAL_NODE_NAME` is the name that will be assigned to the virtual node representing the provider cluster within the consumer cluster;
 
 If the provider cluster accepts the request, a virtual node will be created on the consumer cluster, exposing the requested resources and acting as a proxy for the provider cluster.
-For additional details on the `ResourceSlice` and `VirtualNode` resources, refer to [the dedicated documentation section](./offloading-in-depth.md#create-resourceslice).
+For additional details on the `ResourceSlice` and `VirtualNode` resources, refer to [the dedicated documentation section](https://docs.liqo.io/en/latest/advanced/peering/offloading-in-depth.html#create-resourceslice).
 
 ### Enabling Offloading and Remote Availability of Kubernetes Resources
 
@@ -493,7 +493,7 @@ For instance, the configuration above enables the offloading of the chosen names
 
 >**Note**:When inspecting the status of the Liqo provider cluster, offloading is reported as disabled. This behavior is expected and indicates that the provider cluster is not configured to offload its workloads to the consumer cluster.  
 To enable bidirectional offloading, using different namespaces on both clusters, the same offloading configuration steps must be performed in the opposite direction, from the provider to the consumer cluster.
-Refer to [the namespace offloading documentation](../../usage/namespace-offloading.md#namespace-mapping-strategy) for more in-depth explanations.
+Refer to [the namespace offloading documentation](https://docs.liqo.io/en/latest/usage/namespace-offloading.html#namespace-mapping-strategy) for more in-depth explanations.
 
 >**Note** Currently, the `NamespaceOffloading` resource **must be created before scheduling any pod** intended to run on a remote cluster.  
 If a pod is created before the namespace has been offloaded, it will remain indefinitely in the `Pending` state—even after the offloading configuration is applied.  
