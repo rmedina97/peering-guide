@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: 'https://github.com/rmedina97/peering-guide.git'
     targetRevision: HEAD
-    path: off-local
+    path: offloading-local
   destination:
     server: 'https://kubernetes.default.svc'   # cluster locale
   syncPolicy:
