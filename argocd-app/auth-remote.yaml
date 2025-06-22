@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: net-remote
+  name: auth-remote
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -13,3 +13,7 @@ spec:
     path: auth-remote
   destination:
     server: 'https://172.16.183.16:6443'  # URL API del cluster remoto (come registrato in argocd cluster add)
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
