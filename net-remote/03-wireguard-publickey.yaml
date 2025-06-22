@@ -1,10 +1,10 @@
 apiVersion: networking.liqo.io/v1beta1
 kind: PublicKey
 metadata:
-  labels:
-    liqo.io/remote-cluster-id: consumer
+  labels:  # Mandatory labels for Liqo
+    liqo.io/remote-cluster-id: consumer   # Replace with the actual remote cluster ID
     networking.liqo.io/gateway-resource: "true"
   name: gw-publickey
   namespace: liqo-tenant-consumer
 spec:
-  publicKey: ahPstVhybRiIyxSPhZgfWkc5vMUaJTFHaCcTr2KEW2A=
+  publicKey: ahPstVhybRiIyxSPhZgfWkc5vMUaJTFHaCcTr2KEW2A=   # Replace with the actual public key of the other cluster

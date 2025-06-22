@@ -2,15 +2,15 @@ apiVersion: networking.liqo.io/v1beta1
 kind: Configuration
 metadata:
   creationTimestamp: null
-  labels:
-    liqo.io/remote-cluster-id: consumer
+  labels:   # Mandatory labels for Liqo
+    liqo.io/remote-cluster-id: consumer # Replace with the actual remote cluster ID
   name: consumer
   namespace: liqo-tenant-consumer
 spec:
   remote:
     cidr:
       external:
-      - 10.70.0.0/16
+      - 10.70.0.0/16                    # Replace with the actual remote cluster CIDR
       pod:
-      - 10.42.0.0/16
+      - 10.42.0.0/16                    # Replace with the actual remote cluster pod CIDR
 status: {}

@@ -1,8 +1,8 @@
 apiVersion: networking.liqo.io/v1beta1
 kind: GatewayServer
 metadata:
-  labels:
-    liqo.io/remote-cluster-id: consumer
+  labels:  # Mandatory labels for Liqo
+    liqo.io/remote-cluster-id: consumer   # Replace with the actual remote cluster ID
   name: server
   namespace: liqo-tenant-consumer
 spec:

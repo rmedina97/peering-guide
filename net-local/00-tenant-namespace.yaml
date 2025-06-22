@@ -1,8 +1,8 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  labels:
-    liqo.io/remote-cluster-id: provider
+  labels:  # Mandatory labels for Liqo
+    liqo.io/remote-cluster-id: provider  # Replace with the actual remote cluster ID
     liqo.io/tenant-namespace: "true"
-  name: liqo-tenant-provider
+  name: liqo-tenant-provider      # Replace with the chosen local tenant namespace name
 spec: {}

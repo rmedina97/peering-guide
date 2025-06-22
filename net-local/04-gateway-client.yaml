@@ -2,8 +2,8 @@ apiVersion: networking.liqo.io/v1beta1
 kind: GatewayClient
 metadata:
   creationTimestamp: null
-  labels:
-    liqo.io/remote-cluster-id: provider
+  labels:   # Mandatory labels for Liqo
+    liqo.io/remote-cluster-id: provider   # Replace with the actual remote cluster ID
   name: client
   namespace: liqo-tenant-provider
 spec:
@@ -16,7 +16,7 @@ spec:
     name: gw-keys
   endpoint:
     addresses:
-    - 172.16.183.16
+    - 172.16.183.16   # Replace with the actual endpoint address of the remote cluster
     port: 32750
     protocol: UDP
   mtu: 1340
