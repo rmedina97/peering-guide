@@ -1,0 +1,11 @@
+apiVersion: authentication.liqo.io/v1beta1
+kind: Tenant
+metadata:
+  labels:
+    liqo.io/remote-cluster-id: consumer
+  name: my-tenant
+  namespace: liqo-tenant-consumer
+spec:
+  clusterID: consumer
+  authzPolicy: TolerateNoHandshake
+  tenantCondition: Active
